@@ -29,7 +29,6 @@ void Run(Options options)
             typeof(Debugger).GetMethod(nameof(Debugger.Launch), Type.EmptyTypes)));
         instructions = new[]
         {
-            Instruction.Create(OpCodes.Stloc_0),
             launchDebuggerInstruction,
             Instruction.Create(OpCodes.Pop),
         };
@@ -43,10 +42,8 @@ void Run(Options options)
         
         instructions = new[]
         {
-            Instruction.Create(OpCodes.Stloc_0),
             Instruction.Create(OpCodes.Ldstr, "Please attach debugger, then press any key"),
             writeLineInstruction,
-            Instruction.Create(OpCodes.Nop),
             readKeyInstruction,
             Instruction.Create(OpCodes.Pop),
         };
@@ -55,16 +52,13 @@ void Run(Options options)
     {
         throw new InvalidOperationException("Invalid mode");
     }
-    var firstInstruction = ilProcessor.Body.Instructions[0];//newobj instance void Program/'<>c__DisplayClass0_0'::.ctor()
+    
+    var firstInstruction = ilProcessor.Body.Instructions[0];
     // Insert the new instructions at the beginning of the method
-    for (int i = instructions.Length - 1; i >= 0; i--)
+    for (int i = 0; i < instructions.Length; i++)
     {
-        ilProcessor.InsertAfter(firstInstruction, instructions[i]);
+        ilProcessor.InsertBefore(firstInstruction, instructions[i]);
     }
-
-    // Remove the second stloc.0 instruction
-    var secondStloc_0=  ilProcessor.Body.Instructions.Where(e => e.OpCode.Code == Code.Stloc_0).Skip(1).First();
-    ilProcessor.Remove(secondStloc_0);
     
     // Save the modified assembly
     assembly.Write();
