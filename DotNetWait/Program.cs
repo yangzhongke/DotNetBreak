@@ -45,7 +45,7 @@ void Run(Options options)
             Instruction.Create(OpCodes.Ldstr, "Please attach debugger, then press any key"),
             writeLineInstruction,
             readKeyInstruction,
-            Instruction.Create(OpCodes.Pop),
+            Instruction.Create(OpCodes.Pop),//Use Pop to remove the return value of ReadKey
         };
     }
     else

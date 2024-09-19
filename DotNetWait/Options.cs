@@ -12,6 +12,6 @@ public class Options
 
 public enum Mode
 {
-    Prompt,
+    Prompt,//todo: ConsolePrompt, Timeout
     Break
 }
